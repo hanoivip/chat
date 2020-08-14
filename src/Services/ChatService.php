@@ -74,12 +74,16 @@ class ChatService {
     }
     /**
      * Mark read all meessage from a user
+     * @param number $userId
      * @param number $senderId
-     * @param number $receiverId
      * @return bool|string
      */
-    public function markRead($senderId, $receiverId)
+    public function markRead($userId, $senderId)
     {
-        
+        Message::where('is_read', false)
+        ->where('user_id', $userId)
+        ->where('sender_id', $senderId)
+        ->update(['is_read' => true]);
+        return true;
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Hanoivip\Chat\Models\Message;
 use Hanoivip\Chat\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use Hanoivip\Chat\Services\ChatService;
 use Hanoivip\Chat\Services\ViewObjectService;
@@ -45,6 +46,7 @@ class ChatController extends Controller
             return ['error' => 0, 'data' => ['stat' => $stat]];
         }
         catch (Exception $ex) {
+            Log::error('Chat stat new message exception: ' . $ex->getMessage());
             return ['error' => 2, 'data' => []];
         }
     }
@@ -62,9 +64,10 @@ class ChatController extends Controller
             if ($request->has('page'))
                 $page = $request->input('page');
             $messages = $this->service->getMessages($userId, $sender, $page);
-            return ['error' => 0, 'data' => ['messages' => $messages]];
+            return ['error' => 0, 'data' => ['messages' => $messages, 'read' => 0]];
         }
         catch (Exception $ex) {
+            Log::error('Chat fetch message exception: ' . $ex->getMessage());
             return ['error' => 2, 'data' => []];
         }
     }
@@ -86,7 +89,8 @@ class ChatController extends Controller
                 return ['error' => 0, 'message' => __('hanoivip::chat.send.success'), 'data' => []];
             else 
                 return ['error' => 1, 'message' => $result, 'data' => []];
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
+            Log::error('Chat send message exception: ' . $ex->getMessage());
             return ['error' => 2, 'message' => __('hanoivip::chat.send.exception'), 'data' => []];
         }
     }
@@ -94,15 +98,16 @@ class ChatController extends Controller
     public function markRead(Request $request)
     {
         try {
-            $receiverId = $request->get('receiver');
+            $senderId = $request->get('sender');
             $userId = Auth::user()->getAuthIdentifier();
-            $result = $this->service->markRead($userId, $receiverId);
+            $result = $this->service->markRead($userId, $senderId);
             if ($result === true)
                 return ['error' => 0, 'message' => __('hanoivip::chat.read.success'), 'data' => []];
             else
                 return ['error' => 1, 'message' => $result, 'data' => []];
         }
         catch (Exception $ex) {
+            Log::error('Chat mark read message exception: ' . $ex->getMessage());
             return ['error' => 2, 'message' => __('hanoivip::chat.read.exception'), 'data' => []];
         }
     }
