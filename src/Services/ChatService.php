@@ -4,6 +4,7 @@ namespace Hanoivip\Chat\Services;
 
 use Hanoivip\Chat\Models\Message;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Hanoivip\Chat\ViewObjects\NewMessageVO;
 use Hanoivip\Chat\Events\MessageSent;
 
@@ -19,7 +20,7 @@ class ChatService {
         $records = Message::where('user_id', $userId)
         ->where('is_read', false)
         ->select('sender_id', 'sender_name', DB::raw('count(*) as total'))
-        ->groupBy('sender_id')
+        ->groupBy('sender_id', 'sender_name')
         ->get();
         $vo = [];
         if ($records->isNotEmpty())
@@ -33,6 +34,8 @@ class ChatService {
     }
     /**
      * Get all message sent by <sender>
+     * And
+     * Get all message sent from <user> to <sender>
      * 
      * @param number $userId
      * @param number $senderId
@@ -41,9 +44,8 @@ class ChatService {
      */
     public function getMessages($userId, $senderId, $page = 0)
     {
-        $messages = Message::where('user_id', $userId)
-        ->where('sender_id', $senderId)
-        ->order('id', 'desc')
+        $messages = Message::whereRaw("(user_id=$userId and sender_id=$senderId) or (sender_id=$userId and user_id=$senderId)")
+        ->orderBy('id', 'desc')
         ->skip(10 * $page)
         ->take(10)
         ->get();

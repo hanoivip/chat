@@ -26,6 +26,8 @@ class ModServiceProvider extends ServiceProvider
     public function register()
     {
         $this->commands([
+            \Hanoivip\Chat\Commands\SendToUser::class,
+            \Hanoivip\Chat\Commands\SendToAllUser::class,
         ]);
     }
 }

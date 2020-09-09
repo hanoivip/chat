@@ -34,4 +34,11 @@ class MessageSent implements ShouldBroadcast
     {
         return new PrivateChannel('chat');
     }
+    // FUCK : de mac dinh Hanoivip\Chat\Events\MessageSent deo chay
+    // pusher listener function not fired
+    // here to fix..
+    public function broadcastAs()
+    {
+        return 'test.chat';
+    }
 }
