@@ -16,7 +16,7 @@ export default class Chat extends Component {
 	}
 	componentDidMount() 
 	{
-		const sender=this.props.sender;
+		const sender=this.props.other;
 		const isLoaded=this.state.isLoaded;
 		if (!isLoaded)
 		{
@@ -61,9 +61,9 @@ export default class Chat extends Component {
 		this.setState({messages: messages});
 	}
     render() {
-    	const senderId = this.props.sender;
-    	const senderName = this.props.sname;
-    	const count = this.props.count;
+    	const otherId = this.props.other;
+    	const otherName = this.props.otherName;
+    	//const count = this.props.count;
 		const messages = this.state.messages;
     	const isLoaded = this.state.isLoaded;
 		if (isLoaded)
@@ -74,16 +74,16 @@ export default class Chat extends Component {
 	        	        <div className="col-md-5">
 	        	            <div className="panel panel-primary">
 	        	                <div className="panel-heading" id="accordion">
-	        	                    <span className="glyphicon glyphicon-comment"></span> Chat with {senderName}
+	        	                    <span className="glyphicon glyphicon-comment"></span> Chat with {otherName}
 	        	                    <div className="btn-group pull-right">
-	        	                        <a type="button" className="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+	        	                        <a type="button" className="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href={"#collapseOne" + otherId}>
 	        	                            <span className="glyphicon glyphicon-chevron-down"></span>
 	        	                        </a>
 	        	                    </div>
 	        	                </div>
-		        	            <div className="panel-collapse collapse" id="collapseOne">
-			        	            <ChatMessages sender={senderId} messages={messages}/>
-					    			<ChatForm receiver={senderId} onSent={(message) => this.onSent(message).bind(this) }/>
+		        	            <div className="panel-collapse collapse" id={"collapseOne" + otherId}>
+			        	            <ChatMessages sender={otherId} messages={messages}/>
+					    			<ChatForm receiver={otherId} onSent={(message) => this.onSent(message).bind(this) }/>
 		        	            </div>
 			        	     </div>
 		        	    </div>
@@ -105,8 +105,8 @@ export default class Chat extends Component {
 
 if (document.getElementById('my-chat')) {
 	var element = document.getElementById('my-chat');
-	var sender = element.getAttribute('sender');
-	var sname = element.getAttribute('sname');
-	var count=element.getAttribute('count');
-    ReactDOM.render(<Chat sender={sender} sname={sname} count={count} />, document.getElementById('my-chat'));
+	var sender = element.getAttribute('other');
+	var sname = element.getAttribute('other-name');
+	var count=element.getAttribute('unread');
+    ReactDOM.render(<Chat other={sender} otherName={sname} unread={count} />, document.getElementById('my-chat'));
 }

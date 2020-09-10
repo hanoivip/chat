@@ -39,7 +39,7 @@ export default class ChatList extends Component {
     	const stats=this.state.stats;
     	let list=[];
     	stats.forEach(function (stat, index) {
-    		list.push(<Chat key={index} sender={stat.senderId} sname={stat.senderName} count={stat.count}></Chat>);
+    		list.push(<Chat key={index} other={stat.senderId} otherName={stat.senderName} unread={stat.count}></Chat>);
     	});
         return (
     		<div id="my-chat-list-container">
