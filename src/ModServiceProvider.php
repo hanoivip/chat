@@ -9,9 +9,9 @@ class ModServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../views' => resource_path('views/vendor/hanoivip'),
-            __DIR__.'/../lang' => resource_path('lang/vendor/hanoivip'),
             __DIR__.'/../config' => config_path(),
+            __DIR__.'/../views' => resource_path('views/vendor/hanoivip'),
+            __DIR__.'/../resources/langs' => resource_path('lang/vendor/hanoivip'),
             __DIR__.'/../resources/assets' => resource_path('assets/vendor/hanoivip'),
             __DIR__.'/../resources/images' => public_path('images'),
         ]);
